@@ -1,0 +1,26 @@
+package org.domi;
+
+import org.domi.configuration.StringTaskConfiguration;
+import org.domi.tasks.stringtask.StringTasksService;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+@EnableConfigurationProperties(StringTaskConfiguration.class)
+public class App {
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+        return args -> {
+            StringTasksService tasksService = ctx.getBean(StringTasksService.class);
+            tasksService.processTasks();
+        };
+    }
+}

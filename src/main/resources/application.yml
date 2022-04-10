@@ -1,0 +1,4 @@
+string-task:
+  numberOfProducers : 5
+  numberOfConsumers : 1
+  maxQueueSize: 10
