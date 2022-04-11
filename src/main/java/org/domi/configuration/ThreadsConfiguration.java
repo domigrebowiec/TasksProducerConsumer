@@ -10,11 +10,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 public class ThreadsConfiguration {
 
     @Bean
-    public ScheduledExecutorService scheduledExecutorService(StringTaskConfiguration configuration) {
+    public ScheduledExecutorService scheduledExecutorService(TaskConfiguration configuration) {
         return new ScheduledThreadPoolExecutor(getThreadsNumber(configuration));
     }
 
-    private int getThreadsNumber(StringTaskConfiguration configuration) {
+    private int getThreadsNumber(TaskConfiguration configuration) {
         return configuration.getNumberOfConsumers() + configuration.getNumberOfProducers();
     }
 }

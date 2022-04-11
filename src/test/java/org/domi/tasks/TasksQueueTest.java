@@ -1,6 +1,7 @@
 package org.domi.tasks;
 
 import lombok.Data;
+import org.domi.configuration.TaskConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,10 +11,13 @@ class TasksQueueTest {
     private final static String EXPRESSION = "200 + 100";
     private final static Task task = new TestTask(EXPRESSION);
     private TasksQueue tasksQueue;
+    private TaskConfiguration taskConfiguration;
 
     @BeforeEach
     public void setup() {
-        tasksQueue = new TasksQueue(10);
+        taskConfiguration = new TaskConfiguration();
+        taskConfiguration.setMaxQueueSize(10);
+        tasksQueue = new TasksQueue(taskConfiguration);
     }
 
     @Test
@@ -35,7 +39,8 @@ class TasksQueueTest {
     @Test
     public void shouldNotBeAbleToAddTaskToFullQueue() {
         // given
-        TasksQueue tasksQueue = new TasksQueue(2);
+        taskConfiguration.setMaxQueueSize(2);
+        TasksQueue tasksQueue = new TasksQueue(taskConfiguration);
         tasksQueue.addNewTask(task);
         tasksQueue.addNewTask(task);
 
@@ -49,7 +54,8 @@ class TasksQueueTest {
     @Test
     public void shouldHasNoCapacityWhenQueueWasFullAndSizeIsNotReducedToHalf() throws InterruptedException {
         // given
-        TasksQueue tasksQueue = new TasksQueue(6);
+        taskConfiguration.setMaxQueueSize(6);
+        TasksQueue tasksQueue = new TasksQueue(taskConfiguration);
         tasksQueue.addNewTask(task);
         tasksQueue.addNewTask(task);
         tasksQueue.addNewTask(task);
@@ -67,7 +73,8 @@ class TasksQueueTest {
     @Test
     public void shouldBeAbleToAddTaskToQueueWhichWasFullAndSizeIsReducedToHalf() throws InterruptedException {
         // given
-        TasksQueue tasksQueue = new TasksQueue(5);
+        taskConfiguration.setMaxQueueSize(5);
+        TasksQueue tasksQueue = new TasksQueue(taskConfiguration);
         tasksQueue.addNewTask(task);
         tasksQueue.addNewTask(task);
         tasksQueue.addNewTask(task);
