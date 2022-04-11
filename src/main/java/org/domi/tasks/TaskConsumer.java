@@ -2,6 +2,8 @@ package org.domi.tasks;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
 @Slf4j
 public class TaskConsumer {
     private final Integer consumerId;
@@ -14,18 +16,24 @@ public class TaskConsumer {
         this.taskExecutor = taskExecutor;
     }
 
-    public void run() {
+    public Optional<TaskResult> consume() {
         try {
-            Task task = tasksQueue.readTask();
-            if (task != null) {
-                TaskResult taskResult = taskExecutor.execute(task);
-                log.info("Executed task by Consumer {} :: {} result :: {}", consumerId, task, taskResult.getValue());
-            } else {
-                log.info("Empty queue for Consumer {}", consumerId);
-            }
+            return getTaskResult(tasksQueue.readTask());
         } catch (InterruptedException e) {
             log.error("Consumer {} interrupted", consumerId);
             Thread.currentThread().interrupt();
+        }
+        return Optional.empty();
+    }
+
+    private Optional<TaskResult> getTaskResult(Task task) {
+        if (task != null) {
+            TaskResult taskResult = taskExecutor.execute(task);
+            log.info("Executed task by Consumer {} :: {} result :: {}", consumerId, task, taskResult.getValue());
+            return Optional.of(taskResult);
+        } else {
+            log.info("Empty queue for Consumer {}", consumerId);
+            return Optional.empty();
         }
     }
 }

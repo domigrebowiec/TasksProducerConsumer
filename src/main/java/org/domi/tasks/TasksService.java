@@ -24,7 +24,7 @@ public class TasksService {
             executor.scheduleAtFixedRate(taskProducer::run, 0, 600, TimeUnit.MILLISECONDS);
         }
         for (TaskConsumer taskConsumer : getTaskConsumers()) {
-            executor.scheduleAtFixedRate(taskConsumer::run, 0, 600, TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(taskConsumer::consume, 0, 600, TimeUnit.MILLISECONDS);
         }
     }
 

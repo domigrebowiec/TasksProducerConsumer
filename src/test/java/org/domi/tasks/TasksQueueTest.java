@@ -9,7 +9,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TasksQueueTest {
     private final static String EXPRESSION = "200 + 100";
-    private final static Task task = new TestTask(EXPRESSION);
+    private final static Task task = new TaskStub(EXPRESSION);
     private TasksQueue tasksQueue;
     private TaskConfiguration taskConfiguration;
 
@@ -110,18 +110,13 @@ class TasksQueueTest {
     @Test
     public void shouldQueueBeFIFO() throws InterruptedException {
         // given
-        Task task1 = new TestTask("100 + 100");
-        Task task2 = new TestTask("200 / 5");
+        Task task1 = new TaskStub("100 + 100");
+        Task task2 = new TaskStub("200 / 5");
         tasksQueue.addNewTask(task1);
         tasksQueue.addNewTask(task2);
 
         // when && then
         assertThat(tasksQueue.readTask()).isEqualTo(task1);
         assertThat(tasksQueue.readTask()).isEqualTo(task2);
-    }
-
-    @Data
-    private static class TestTask implements Task {
-        private final String value;
     }
 }
