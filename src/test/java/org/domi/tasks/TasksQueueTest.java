@@ -1,6 +1,5 @@
 package org.domi.tasks;
 
-import lombok.Data;
 import org.domi.configuration.TaskConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,6 +51,20 @@ class TasksQueueTest {
     }
 
     @Test
+    public void shouldHasCapacityWhenQueueWasNotFullYet() {
+        // given
+        taskConfiguration.setMaxQueueSize(6);
+        TasksQueue tasksQueue = new TasksQueue(taskConfiguration);
+        tasksQueue.addNewTask(task);
+        tasksQueue.addNewTask(task);
+        tasksQueue.addNewTask(task);
+        tasksQueue.addNewTask(task);
+
+        // when && then
+        assertThat(tasksQueue.hasCapacity()).isTrue();
+    }
+
+    @Test
     public void shouldHasNoCapacityWhenQueueWasFullAndSizeIsNotReducedToHalf() throws InterruptedException {
         // given
         taskConfiguration.setMaxQueueSize(6);
@@ -71,7 +84,7 @@ class TasksQueueTest {
     }
 
     @Test
-    public void shouldBeAbleToAddTaskToQueueWhichWasFullAndSizeIsReducedToHalf() throws InterruptedException {
+    public void shouldHasCapacityWhenQueueWasFullAndSizeIsReducedToHalf() throws InterruptedException {
         // given
         taskConfiguration.setMaxQueueSize(5);
         TasksQueue tasksQueue = new TasksQueue(taskConfiguration);
@@ -87,7 +100,7 @@ class TasksQueueTest {
         tasksQueue.readTask();
 
         // when && then
-        assertThat(tasksQueue.addNewTask(task)).isTrue();
+        assertThat(tasksQueue.hasCapacity()).isTrue();
     }
 
     @Test

@@ -21,7 +21,7 @@ public class TasksService {
 
     public void processTasks() {
         for (TaskProducer taskProducer : getTaskProducers()) {
-            executor.scheduleAtFixedRate(taskProducer::run, 0, 600, TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(taskProducer::produce, 0, 600, TimeUnit.MILLISECONDS);
         }
         for (TaskConsumer taskConsumer : getTaskConsumers()) {
             executor.scheduleAtFixedRate(taskConsumer::consume, 0, 600, TimeUnit.MILLISECONDS);
@@ -29,10 +29,10 @@ public class TasksService {
     }
 
     private List<TaskConsumer> getTaskConsumers() {
-        return IntStream.range(0, configuration.getNumberOfConsumers()).mapToObj(i -> producerConsumerFactory.createConsumer()).collect(Collectors.toList());
+        return IntStream.rangeClosed(1, configuration.getNumberOfConsumers()).mapToObj(i -> producerConsumerFactory.createConsumer()).collect(Collectors.toList());
     }
 
     private List<TaskProducer> getTaskProducers() {
-        return IntStream.range(0, configuration.getNumberOfProducers()).mapToObj(i -> producerConsumerFactory.createProducer()).collect(Collectors.toList());
+        return IntStream.rangeClosed(1, configuration.getNumberOfProducers()).mapToObj(i -> producerConsumerFactory.createProducer()).collect(Collectors.toList());
     }
 }

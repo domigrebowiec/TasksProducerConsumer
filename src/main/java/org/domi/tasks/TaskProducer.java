@@ -14,13 +14,25 @@ public class TaskProducer {
         this.taskCreator = taskCreator;
     }
 
-    public void run() {
-        if (tasksQueue.hasCapacity()) {
-            Task task = taskCreator.create();
-            tasksQueue.addNewTask(task);
+    public boolean produce() {
+        synchronized (tasksQueue) {
+            if (tasksQueue.hasCapacity()) {
+                return addNewTask();
+            } else {
+                log.info("No capacity for Producer {}", producerId);
+                return false;
+            }
+        }
+    }
+
+    private boolean addNewTask() {
+        Task task = taskCreator.create();
+        if (tasksQueue.addNewTask(task)) {
             log.info("New task added by Producer {} {}", producerId, task);
+            return true;
         } else {
-            log.info("No capacity for Producer {}", producerId);
+            log.info("New task was not added by Producer {}", producerId);
+            return false;
         }
     }
 }

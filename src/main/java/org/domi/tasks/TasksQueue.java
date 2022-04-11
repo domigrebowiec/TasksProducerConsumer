@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class TasksQueue {
     private final ArrayBlockingQueue<Task> queue;
     private final Integer halfQueueSize;
+    private boolean full;
 
     public TasksQueue(TaskConfiguration taskConfiguration) {
         this.queue = new ArrayBlockingQueue<>(taskConfiguration.getMaxQueueSize());
@@ -19,15 +20,24 @@ public class TasksQueue {
         log.info("TasksQueue created with max queue size = {}, half queue size = {}", taskConfiguration.getMaxQueueSize(), halfQueueSize);
     }
 
-    public boolean hasCapacity() {
-        return queue.remainingCapacity() >= halfQueueSize;
+    public synchronized boolean hasCapacity() {
+        int remainingCapacity = queue.remainingCapacity();
+        return full ? remainingCapacity >= halfQueueSize : remainingCapacity > 0;
     }
 
-    public boolean addNewTask(Task task) {
-       return queue.offer(task);
+    public synchronized boolean addNewTask(Task task) {
+        boolean added = queue.offer(task);
+        if (added && queue.remainingCapacity() == 0) {
+            full = true;
+        }
+        return added;
     }
 
-    public Task readTask() throws InterruptedException {
-        return queue.poll(2, TimeUnit.SECONDS);
+    public synchronized Task readTask() throws InterruptedException {
+        Task task = queue.poll(20, TimeUnit.MILLISECONDS);
+        if (full && queue.remainingCapacity() >= halfQueueSize) {
+            full = false;
+        }
+        return task;
     }
 }

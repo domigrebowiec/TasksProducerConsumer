@@ -1,4 +1,4 @@
 task:
-  numberOfProducers : 5
-  numberOfConsumers : 1
+  numberOfProducers : 3
+  numberOfConsumers : 5
   maxQueueSize: 10
