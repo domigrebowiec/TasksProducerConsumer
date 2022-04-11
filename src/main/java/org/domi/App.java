@@ -1,7 +1,6 @@
 package org.domi;
 
 import org.domi.configuration.TaskConfiguration;
-import org.domi.tasks.TasksService;
 import org.domi.tasks.stringtask.StringTasksService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +19,7 @@ public class App {
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
-            TasksService tasksService = ctx.getBean(StringTasksService.class);
+            StringTasksService tasksService = ctx.getBean(StringTasksService.class);
             tasksService.processTasks();
         };
     }
