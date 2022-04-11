@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Component
 public class TasksQueue {
     private final ArrayBlockingQueue<Task> queue;
     private final Integer halfQueueSize;
-    private boolean full;
+    private final AtomicBoolean full = new AtomicBoolean(false);
 
     public TasksQueue(TaskConfiguration taskConfiguration) {
         this.queue = new ArrayBlockingQueue<>(taskConfiguration.getMaxQueueSize());
@@ -22,21 +23,21 @@ public class TasksQueue {
 
     public synchronized boolean hasCapacity() {
         int remainingCapacity = queue.remainingCapacity();
-        return full ? remainingCapacity >= halfQueueSize : remainingCapacity > 0;
+        return full.get() ? remainingCapacity >= halfQueueSize : remainingCapacity > 0;
     }
 
     public synchronized boolean addNewTask(Task task) {
         boolean added = queue.offer(task);
         if (added && queue.remainingCapacity() == 0) {
-            full = true;
+            full.set(true);
         }
         return added;
     }
 
     public synchronized Task readTask() throws InterruptedException {
         Task task = queue.poll(20, TimeUnit.MILLISECONDS);
-        if (full && queue.remainingCapacity() >= halfQueueSize) {
-            full = false;
+        if (full.get() && queue.remainingCapacity() >= halfQueueSize) {
+            full.set(false);
         }
         return task;
     }
