@@ -4,7 +4,7 @@ import org.domi.tasks.TaskConsumer;
 import org.domi.tasks.TaskProducer;
 import org.domi.tasks.TasksQueue;
 import org.domi.tasks.stringtask.ExpressionCalculator;
-import org.domi.tasks.stringtask.StringTaskGenerator;
+import org.domi.tasks.stringtask.StringTaskCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -17,7 +17,7 @@ public class BeansConfiguration {
 
     @Bean(name = "stringTaskProducer")
     @Scope("prototype")
-    public TaskProducer stringTaskProducer(TasksQueue tasksQueue, StringTaskGenerator stringTaskGenerator) {
+    public TaskProducer stringTaskProducer(TasksQueue tasksQueue, StringTaskCreator stringTaskGenerator) {
         return new TaskProducer(producerId++, tasksQueue, stringTaskGenerator);
     }
 

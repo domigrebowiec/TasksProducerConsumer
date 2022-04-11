@@ -6,19 +6,19 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-class StringTaskGeneratorTest {
+class StringTaskCreatorTest {
 
-    private StringTaskGenerator expressionGenerator;
+    private StringTaskCreator expressionGenerator;
 
     @BeforeEach
     public void setup() {
-        expressionGenerator = new StringTaskGenerator();
+        expressionGenerator = new StringTaskCreator();
     }
 
     @Test
     public void shouldBeAbleToCreateStringTaskFromRandomlyGeneratedExpression() {
         // when
-        Task task = expressionGenerator.generate();
+        Task task = expressionGenerator.create();
 
         // then
         assertThat(task).isNotNull();

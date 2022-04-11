@@ -6,17 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskProducer {
     private final Integer producerId;
     private final TasksQueue tasksQueue;
-    private final TaskGenerator taskGenerator;
+    private final TaskCreator taskCreator;
 
-    public TaskProducer(Integer producerId, TasksQueue tasksQueue, TaskGenerator taskGenerator) {
+    public TaskProducer(Integer producerId, TasksQueue tasksQueue, TaskCreator taskCreator) {
         this.producerId = producerId;
         this.tasksQueue = tasksQueue;
-        this.taskGenerator = taskGenerator;
+        this.taskCreator = taskCreator;
     }
 
     public void run() {
         if (tasksQueue.hasCapacity()) {
-            Task task = taskGenerator.generate();
+            Task task = taskCreator.create();
             tasksQueue.addNewTask(task);
             log.info("New task added by Producer {} {}", producerId, task);
         } else {

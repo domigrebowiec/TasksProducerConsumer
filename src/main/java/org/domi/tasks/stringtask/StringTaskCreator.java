@@ -3,19 +3,19 @@ package org.domi.tasks.stringtask;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.domi.tasks.Task;
-import org.domi.tasks.TaskGenerator;
+import org.domi.tasks.TaskCreator;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.IntStream;
 
 @Component
-public class StringTaskGenerator implements TaskGenerator {
+public class StringTaskCreator implements TaskCreator {
     private static final int MINIMAL_NUMBER_VALUE = 0;
     private static final int MAXIMAL_NUMBER_VALUE = 1000000;
     private static final String OPERATORS = "+/*-";
 
     @Override
-    public Task generate() {
+    public Task create() {
         return new StringTask(randomlyGenerateExpression());
     }
 
