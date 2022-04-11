@@ -40,4 +40,8 @@ public class TasksQueue {
         }
         return task;
     }
+
+    public int size() {
+        return queue.size();
+    }
 }

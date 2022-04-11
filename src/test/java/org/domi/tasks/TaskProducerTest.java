@@ -22,8 +22,11 @@ class TaskProducerTest {
 
     @Test
     public void shouldAddNewTaskToEmptyTasksQueue() {
-        // when && then
-        assertThat(taskProducer.produce()).isTrue();
+        // when
+        taskProducer.produce();
+
+        // then
+        assertThat(tasksQueue.size()).isEqualTo(1);
     }
 
     @Test
@@ -33,8 +36,11 @@ class TaskProducerTest {
         tasksQueue.addNewTask(TASK_STUB);
         tasksQueue.addNewTask(TASK_STUB);
 
-        // when && then
-        assertThat(taskProducer.produce()).isTrue();
+        // when
+        taskProducer.produce();
+
+        // then
+        assertThat(tasksQueue.size()).isEqualTo(4);
     }
 
     @Test
@@ -45,8 +51,11 @@ class TaskProducerTest {
         tasksQueue.addNewTask(TASK_STUB);
         tasksQueue.addNewTask(TASK_STUB);
 
-        // when && then
-        assertThat(taskProducer.produce()).isFalse();
+        // when
+        taskProducer.produce();
+
+        // then
+        assertThat(tasksQueue.size()).isEqualTo(4);
     }
 
     @Test
@@ -58,8 +67,11 @@ class TaskProducerTest {
         tasksQueue.addNewTask(TASK_STUB);
         tasksQueue.readTask();
 
-        // when && then
-        assertThat(taskProducer.produce()).isFalse();
+        // when
+        taskProducer.produce();
+
+        // then
+        assertThat(tasksQueue.size()).isEqualTo(3);
     }
 
     @Test
@@ -72,7 +84,10 @@ class TaskProducerTest {
         tasksQueue.readTask();
         tasksQueue.readTask();
 
-        // when && then
-        assertThat(taskProducer.produce()).isTrue();
+        // when
+        taskProducer.produce();
+
+        // then
+        assertThat(tasksQueue.size()).isEqualTo(3);
     }
 }
